@@ -10,15 +10,7 @@ const FortuneTellingPage = () => {
   const maxClicks = 10;
   const progressValue = (clickCount / maxClicks) * 100;
 
-  const handleClick = () => {
-    if (clickCount < maxClicks) {
-      const nextCount = clickCount + 1;
-      setClickCount(nextCount);
-      if (nextCount >= maxClicks) {
-        // 10回クリックしたら次の画面に遷移
-        router.push("/");
-      }
-    }
+  const handleConfetti = () => {
     confetti({
       // パーティクルの数（デフォルト50)
       particleCount: 200,
@@ -47,6 +39,18 @@ const FortuneTellingPage = () => {
       // z-indexを指定(default:100)
       zIndex: 100,
     });
+  };
+
+  const handleClick = () => {
+    if (clickCount < maxClicks) {
+      const nextCount = clickCount + 1;
+      setClickCount(nextCount);
+      if (nextCount >= maxClicks) {
+        handleConfetti();
+        // 10回クリックしたら次の画面に遷移
+        router.push("/");
+      }
+    }
   };
 
   return (
