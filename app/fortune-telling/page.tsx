@@ -27,7 +27,7 @@ const FortuneTellingPage = () => {
         // localStorageに今日の日付と結果を保存
         const fortuneData = {
           date: new Date().toLocaleDateString(),
-          result: data.text,
+          ...data,
         };
         localStorage.setItem("my_fortune", JSON.stringify(fortuneData));
 

@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const ResultPage = () => {
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<{
+    fortune: string;
+    voiceOfHeaven: string;
+    analysis: { item: string; advice: string; score: number }[];
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(true); // 初期値を true にする
   const router = useRouter();
 
@@ -12,10 +16,10 @@ const ResultPage = () => {
     const saved = localStorage.getItem("my_fortune");
 
     if (saved) {
-      const { result: savedResult } = JSON.parse(saved);
+      const { fortune, voiceOfHeaven, analysis } = JSON.parse(saved);
       // setTimeout でラップして、同期的な setState を回避
       setTimeout(() => {
-        setResult(savedResult);
+        setResult({ fortune, voiceOfHeaven, analysis });
       }, 0);
       setTimeout(() => {
         setIsLoading(false);
@@ -25,8 +29,8 @@ const ResultPage = () => {
       const timer = setTimeout(() => {
         const retrySaved = localStorage.getItem("my_fortune");
         if (retrySaved) {
-          const { result: retryResult } = JSON.parse(retrySaved);
-          setResult(retryResult);
+          const { fortune, voiceOfHeaven, analysis } = JSON.parse(retrySaved);
+          setResult({ fortune, voiceOfHeaven, analysis });
           setIsLoading(false);
         } else {
           // それでもなければ、ガチャを回していないと判断
@@ -68,7 +72,19 @@ const ResultPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 text-white">
       <h1 className="text-2xl font-bold mb-6">今日の結果</h1>
       <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md max-w-lg whitespace-pre-wrap shadow-2xl">
-        {result}
+        <p>運勢: {result.fortune}</p>
+        <p>天のみこえ: {result.voiceOfHeaven}</p>
+        <div className="mt-4">
+          <h3 className="text-lg font-bold mb-2">分析</h3>
+          <ul className="list-disc pl-5">
+            {result.analysis.map((item) => (
+              <li key={item.item}>
+                <span className="font-bold">{item.item}:</span> {item.advice} (
+                {item.score}/5)
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <button
         onClick={() => router.push("/")}
