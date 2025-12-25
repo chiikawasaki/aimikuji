@@ -1,4 +1,4 @@
-import FortunetellingForm from "./components/FortunetellingForm";
+import FortunetellingForm from "../components/FortunetellingForm";
 
 export default function Home() {
   return (
