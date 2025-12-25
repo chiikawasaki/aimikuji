@@ -1,14 +1,44 @@
 "use client";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import confetti from "canvas-confetti";
 
 const FortuneTellingPage = () => {
   const [clickCount, setClickCount] = useState(0);
+  const [apiFinished, setApiFinished] = useState(false);
+  const searchParams = useSearchParams();
   const router = useRouter();
   const maxClicks = 10;
   const progressValue = (clickCount / maxClicks) * 100;
+
+  useEffect(() => {
+    const fetchFortune = async () => {
+      const genre = searchParams?.get("genre");
+      const worries = searchParams?.get("worries");
+
+      try {
+        const response = await fetch("/api/fortune", {
+          method: "POST",
+          body: JSON.stringify({ genre: genre || "", worries: worries || "" }),
+        });
+        const data = await response.json();
+
+        // localStorageに今日の日付と結果を保存
+        const fortuneData = {
+          date: new Date().toLocaleDateString(),
+          result: data.text,
+        };
+        localStorage.setItem("my_fortune", JSON.stringify(fortuneData));
+
+        setApiFinished(true); // API完了フラグ
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchFortune();
+  }, []);
 
   const handleConfetti = () => {
     confetti({
@@ -48,7 +78,7 @@ const FortuneTellingPage = () => {
       if (nextCount >= maxClicks) {
         handleConfetti();
         // 10回クリックしたら次の画面に遷移
-        router.push("/");
+        router.push("/result");
       }
     }
   };
