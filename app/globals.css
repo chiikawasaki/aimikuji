@@ -10,6 +10,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-hachi-maru-pop: var(--font-hachi-maru-pop);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,8 +23,8 @@
 body {
   position: relative;
   background-color: #1b1e35;
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #ffffff;
+  font-family: var(--font-hachi-maru-pop), Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
