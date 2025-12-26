@@ -14,6 +14,8 @@ const ResultPage = () => {
   const [result, setResult] = useState<{
     fortune: string;
     voiceOfHeaven: string;
+    overallMessage: string;
+    luckyItem: string;
     analysis: { item: string; advice: string; score: number }[];
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true); // 初期値を true にする
@@ -24,10 +26,17 @@ const ResultPage = () => {
     const saved = localStorage.getItem("my_fortune");
 
     if (saved) {
-      const { fortune, voiceOfHeaven, analysis } = JSON.parse(saved);
+      const { fortune, voiceOfHeaven, overallMessage, luckyItem, analysis } =
+        JSON.parse(saved);
       // setTimeout でラップして、同期的な setState を回避
       setTimeout(() => {
-        setResult({ fortune, voiceOfHeaven, analysis });
+        setResult({
+          fortune,
+          voiceOfHeaven,
+          overallMessage,
+          luckyItem,
+          analysis,
+        });
       }, 0);
       setTimeout(() => {
         setIsLoading(false);
@@ -37,14 +46,26 @@ const ResultPage = () => {
       const timer = setTimeout(() => {
         const retrySaved = localStorage.getItem("my_fortune");
         if (retrySaved) {
-          const { fortune, voiceOfHeaven, analysis } = JSON.parse(retrySaved);
-          setResult({ fortune, voiceOfHeaven, analysis });
+          const {
+            fortune,
+            voiceOfHeaven,
+            overallMessage,
+            luckyItem,
+            analysis,
+          } = JSON.parse(retrySaved);
+          setResult({
+            fortune,
+            voiceOfHeaven,
+            overallMessage,
+            luckyItem,
+            analysis,
+          });
           setIsLoading(false);
         } else {
           // それでもなければ、ガチャを回していないと判断
           setIsLoading(false);
         }
-      }, 5000); // 1秒だけ待ってみる
+      }, 10000); // 10秒待ってみる
 
       return () => clearTimeout(timer);
     }
@@ -83,21 +104,21 @@ const ResultPage = () => {
   // 3. 結果がある場合の表示
   // 3. 結果がある場合の表示
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-8xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">今日の結果</h1>
 
       {/* Gridコンテナ: スマホは1列、PC(lg以上)は2列 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* --- 左カラム: 運勢とグラフ --- */}
         <div className="space-y-6">
-          <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl flex flex-col items-center border-2 border-indigo-400/40 shadow-indigo-900/30">
+          <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl flex flex-col items-center border-2 border-indigo-400/40 shadow-indigo-900">
             <span className="text-indigo-200 text-sm mb-2">今日の運勢</span>
             <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-indigo-300">
               {result.fortune}
             </p>
           </div>
 
-          <div className="h-[400px] p-6 bg-white/10 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900/30">
+          <div className="h-[400px] p-6 bg-white/10 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900">
             <p className="text-lg font-bold mb-2">運勢分析グラフ</p>
             <ResponsiveContainer width="100%" height="90%">
               <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
@@ -122,16 +143,26 @@ const ResultPage = () => {
               </RadarChart>
             </ResponsiveContainer>
           </div>
+          <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900 flex items-center gap-4">
+            <div className="bg-pink-500/20 p-3 rounded-xl text-2xl">🎁</div>
+            <div>
+              <p className="text-xs text-indigo-200 uppercase tracking-wider">
+                Lucky Item
+              </p>
+              <p className="text-lg font-bold text-pink-100">
+                {result.luckyItem}
+              </p>
+            </div>
+          </div>
         </div>
-
         {/* --- 右カラム: 天のみこえと分析詳細 --- */}
-        <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900/30 space-y-8">
+        <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900 space-y-8">
           <div>
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <span className="text-2xl">✨</span> 天のみこえ
-            </h3>
-            <p className="text-lg italic leading-relaxed text-indigo-50 border-l-4 border-pink-400 pl-4">
+            <p className="text-2xl italic leading-relaxed text-indigo-50 font-bold">
               {result.voiceOfHeaven}
+            </p>
+            <p className="text-lg italic leading-relaxed text-indigo-50">
+              {result.overallMessage}
             </p>
           </div>
 
@@ -144,9 +175,6 @@ const ResultPage = () => {
                 <div key={item.item} className="group">
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-pink-200">{item.item}</span>
-                    <span className="text-sm bg-indigo-500/30 px-2 py-0.5 rounded-full">
-                      スコア: {item.score}/5
-                    </span>
                   </div>
                   <p className="text-sm text-gray-200 leading-snug">
                     {item.advice}

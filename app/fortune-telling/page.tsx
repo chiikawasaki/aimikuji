@@ -20,7 +20,7 @@ const FortuneTellingPage = () => {
       try {
         const response = await fetch("/api/fortune", {
           method: "POST",
-          body: JSON.stringify({ genre: genre || "", worries: worries || "" }),
+          body: JSON.stringify({ genre: genre || "その他", worries: worries || "特になし" }),
         });
         const data = await response.json();
 
