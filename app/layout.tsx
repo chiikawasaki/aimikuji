@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Hachi_Maru_Pop } from "next/font/google";
+import { Shippori_Mincho } from "next/font/google";
 import "./globals.css";
 
-const hachiMaruPop = Hachi_Maru_Pop({
-  variable: "--font-hachi-maru-pop",
+const ShipporiMincho = Shippori_Mincho({
+  variable: "--font-shippori-mincho",
   weight: "400",
   subsets: ["latin"],
 });
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${hachiMaruPop.variable} antialiased`}
+        className={`${ShipporiMincho.variable} antialiased bg-gradient-to-br from-pink-100 via-purple-50 to-teal-100 text-[#4b2e2c]`}
         suppressHydrationWarning
       >
         {children}

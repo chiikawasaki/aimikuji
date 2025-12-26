@@ -10,7 +10,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-hachi-maru-pop: var(--font-hachi-maru-pop);
+  --font-shippori-mincho: var(--font-shippori-mincho);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,9 +21,7 @@
 }
 
 body {
-  background-color: #162456;
-  color: #ffffff;
-  font-family: var(--font-hachi-maru-pop), Arial, Helvetica, sans-serif;
+  font-family: var(--font-shippori-mincho), serif;
   min-height: 100vh;
 }
 
@@ -39,15 +37,7 @@ progress.progress-bar::-webkit-progress-bar {
 }
 
 progress.progress-bar::-webkit-progress-value {
-  background: linear-gradient(
-    90deg,
-    #e13496,
-    #d262d3,
-    #d658c2,
-    #2f125f,
-    #e13496
-  );
-  background-size: 200% 100%;
+  background: #e13496;
   border-radius: 9999px;
   box-shadow: 0 0 10px rgba(225, 52, 150, 0.5),
     inset 0 2px 4px rgba(255, 255, 255, 0.3);
@@ -56,15 +46,7 @@ progress.progress-bar::-webkit-progress-value {
 }
 
 progress.progress-bar::-moz-progress-bar {
-  background: linear-gradient(
-    90deg,
-    #e13496,
-    #d262d3,
-    #d658c2,
-    #2f125f,
-    #e13496
-  );
-  background-size: 200% 100%;
+  background: #e13496;
   border-radius: 9999px;
   box-shadow: 0 0 10px rgba(225, 52, 150, 0.5),
     inset 0 2px 4px rgba(255, 255, 255, 0.3);
@@ -89,7 +71,16 @@ progress.progress-bar::-moz-progress-bar {
   width: 150px;
   padding: 50px;
   border-radius: 20px;
-  background: rgb(228, 191, 255);
+  background: #fdf1f8;
+  border: 4px solid #fccee8;
+}
+
+/* モバイル対応：吹き出しを上に表示 */
+@media (max-width: 640px) {
+  .speechBubble {
+    padding: 15px !important;
+    width: 80px !important;
+  }
 }
 
 .speechBubble::after {
@@ -99,6 +90,16 @@ progress.progress-bar::-moz-progress-bar {
   left: 0;
   border-style: solid;
   border-width: 12px 12px 0 0;
-  border-color: transparent rgb(228, 191, 255) transparent transparent;
+  border-color: transparent #fccee8 transparent transparent;
   translate: -100% -50%;
+}
+
+@media (max-width: 640px) {
+  .speechBubble::after {
+    top: 100% !important;
+    left: 50% !important;
+    border-width: 12px 12px 0 12px !important;
+    border-color: #fccee8 transparent transparent transparent !important;
+    translate: -50% 0 !important;
+  }
 }

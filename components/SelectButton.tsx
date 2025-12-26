@@ -27,16 +27,16 @@ const SelectButton = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <div ref={dropdownRef} className="relative w-100 mt-2 max-w-md mb-4">
+    <div ref={dropdownRef} className="relative w-full mt-2 max-w-md mb-4">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 rounded-xl bg-gradient-to-r from-indigo-950/80 to-purple-950/80 border-2 border-indigo-400/40 text-indigo-100 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-400/50 focus:border-indigo-400 hover:border-indigo-300/60 transition-all duration-300 shadow-xl shadow-indigo-900/30 backdrop-blur-md cursor-pointer flex justify-between"
+        className="w-full p-4 rounded-xl bg-pink-50 border-2 border-pink-400/30 shadow-xl shadow-pink-700/10 backdrop-blur-md cursor-pointer flex justify-between"
       >
         <span>{selected.label}</span>
         {/* MEMO:矢印マーク 開いているときは180度回転 */}
         <svg
-          className={`w-5 h-5 text-indigo-300 transition-transform duration-200 ${
+          className={`w-5 h-5 text-pink-300 transition-transform duration-200 ${
             isOpen && "rotate-180"
           }`}
           fill="none"
@@ -53,7 +53,7 @@ const SelectButton = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-2 rounded-xl bg-gradient-to-b from-indigo-950 to-purple-950 border-2 border-indigo-400/40 shadow-2xl shadow-indigo-900/50 backdrop-blur-md overflow-hidden">
+        <div className="absolute z-10 w-full mt-2 rounded-xl bg-pink-50 border-2 border-pink-300/30 shadow-xl shadow-pink-700/10 backdrop-blur-md overflow-hidden">
           {defaultOptions.map((option) => (
             <button
               key={option.value}
@@ -64,8 +64,8 @@ const SelectButton = ({
               }}
               className={`w-full p-4 text-left transition-all duration-200 cursor-pointer ${
                 selected.value === option.value
-                  ? "bg-gradient-to-r from-purple-700 to-pink-600 font-semibold"
-                  : "hover:bg-purple-700/50"
+                  ? "bg-pink-700/20 font-semibold"
+                  : "hover:bg-pink-700/20"
               }`}
             >
               {option.label}

@@ -8,7 +8,10 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   ResponsiveContainer,
+  Text,
 } from "recharts";
+import Button from "@/components/Button";
+import { ChartPieIcon, GiftIcon, MessageCircleIcon } from "lucide-react";
 
 const ResultPage = () => {
   const [result, setResult] = useState<{
@@ -19,6 +22,7 @@ const ResultPage = () => {
     analysis: { item: string; advice: string; score: number }[];
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true); // 初期値を true にする
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -71,10 +75,20 @@ const ResultPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(max-width: 640px)");
+    const handler = (e: MediaQueryListEvent | MediaQueryList) =>
+      setIsMobile(e.matches);
+    handler(mql);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
   // 1. 読み込み中（localStorage確認中）の表示
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-white">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="animate-spin h-10 w-10 border-4 border-pink-500 rounded-full border-t-transparent mb-4"></div>
         <p>運勢を読み取っています...</p>
       </div>
@@ -84,11 +98,11 @@ const ResultPage = () => {
   // 2. データがなかった場合の表示
   if (!result) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-white">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <p>今日の運勢がまだ占われていません。</p>
         <button
           onClick={() => router.push("/")}
-          className="mt-4 bg-pink-600 px-4 py-2 rounded-lg"
+          className="mt-4 px-4 py-2 rounded-lg"
         >
           おみくじを引きに行く
         </button>
@@ -101,6 +115,26 @@ const ResultPage = () => {
     score: item.score,
     fullMark: 5,
   }));
+
+  // カスタムラベルコンポーネント（Textコンポーネントを使って簡潔に）
+  const renderCustomTick = (props: {
+    payload: { value: string };
+    x?: number | string;
+    y?: number | string;
+    textAnchor?: "start" | "middle" | "end" | "inherit";
+  }) => (
+    <Text
+      {...props}
+      width={isMobile ? 90 : undefined}
+      breakAll
+      verticalAnchor="middle"
+      fontSize={12}
+      fill="#4b2e2c"
+    >
+      {props.payload.value}
+    </Text>
+  );
+
   // 3. 結果がある場合の表示
   // 3. 結果がある場合の表示
   return (
@@ -111,25 +145,28 @@ const ResultPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* --- 左カラム: 運勢とグラフ --- */}
         <div className="space-y-6">
-          <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl flex flex-col items-center border-2 border-indigo-400/40 shadow-indigo-900">
-            <span className="text-indigo-200 text-sm mb-2">今日の運勢</span>
-            <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-indigo-300">
-              {result.fortune}
-            </p>
+          <div className="bg-pink-50 p-8 rounded-2xl backdrop-blur-md shadow-lg flex flex-col items-center border-2 border-pink-400/30 shadow-pink-700/30">
+            <span className="text-sm mb-2">今日の運勢</span>
+            <p className="text-5xl font-extrabold">{result.fortune}</p>
           </div>
-
-          <div className="h-[400px] p-6 bg-white/10 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900">
-            <p className="text-lg font-bold mb-2">運勢分析グラフ</p>
+          <div className="h-[400px] p-6 bg-pink-50 rounded-2xl backdrop-blur-md shadow-lg border-2 border-pink-400/30 shadow-pink-700/30">
+            <div className="flex items-center gap-2">
+              <ChartPieIcon />
+              <p className="text-lg font-bold">運勢分析グラフ</p>
+            </div>
             <ResponsiveContainer width="100%" height="90%">
-              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
-                <PolarGrid stroke="#ffffff44" />
-                <PolarAngleAxis
-                  dataKey="item"
-                  stroke="#fff"
-                  tick={{ fill: "#fff", fontSize: 12 }}
-                />
+              <RadarChart
+                cx="50%"
+                cy="50%"
+                outerRadius="70%"
+                data={data}
+                margin={{ top: 10, right: 30, bottom: 10, left: 30 }}
+              >
+                <PolarGrid stroke="#814f4b" />
+                <PolarAngleAxis dataKey="item" tick={renderCustomTick} />
                 <PolarRadiusAxis
                   domain={[0, 5]}
+                  tickCount={6}
                   tick={false}
                   axisLine={false}
                 />
@@ -139,46 +176,46 @@ const ResultPage = () => {
                   stroke="#ff88d8"
                   fill="#ff88d8"
                   fillOpacity={0.6}
+                  strokeWidth={2}
                 />
               </RadarChart>
             </ResponsiveContainer>
           </div>
-          <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900 flex items-center gap-4">
-            <div className="bg-pink-500/20 p-3 rounded-xl text-2xl">🎁</div>
+          <div className="p-4 bg-pink-50 rounded-2xl backdrop-blur-md shadow-lg border-2 border-pink-400/30 shadow-pink-700/30 flex items-center gap-4">
+            <div className="bg-pink-500/20 p-3 rounded-xl text-2xl">
+              <GiftIcon />
+            </div>
             <div>
-              <p className="text-xs text-indigo-200 uppercase tracking-wider">
-                Lucky Item
-              </p>
-              <p className="text-lg font-bold text-pink-100">
-                {result.luckyItem}
-              </p>
+              <p className="text-xs uppercase tracking-wider">Lucky Item</p>
+              <p className="text-lg font-bold">{result.luckyItem}</p>
             </div>
           </div>
         </div>
         {/* --- 右カラム: 天のみこえと分析詳細 --- */}
-        <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900 space-y-8">
+        <div className="bg-pink-50 p-8 rounded-2xl backdrop-blur-md shadow-lg border-2 border-pink-400/30 shadow-pink-700/30 space-y-8">
           <div>
-            <p className="text-2xl italic leading-relaxed text-indigo-50 font-bold">
+            <p className="text-2xl italic leading-relaxed font-bold mb-4">
               {result.voiceOfHeaven}
             </p>
-            <p className="text-lg italic leading-relaxed text-indigo-50">
+            <p className="text-lg italic leading-relaxed">
               {result.overallMessage}
             </p>
           </div>
 
           <div>
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <span className="text-2xl">🔍</span> 詳細分析
+              <div className="flex items-center gap-2">
+                <MessageCircleIcon />
+                <span>アドバイス</span>
+              </div>
             </h3>
             <div className="space-y-6">
               {result.analysis.map((item) => (
                 <div key={item.item} className="group">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold text-pink-200">{item.item}</span>
+                    <span className="font-bold">{item.item}</span>
                   </div>
-                  <p className="text-sm text-gray-200 leading-snug">
-                    {item.advice}
-                  </p>
+                  <p className="text-sm leading-snug">{item.advice}</p>
                 </div>
               ))}
             </div>
@@ -187,12 +224,11 @@ const ResultPage = () => {
       </div>
 
       <div className="mt-12 text-center">
-        <button
+        <Button
+          buttonType="button"
+          text="← 戻る"
           onClick={() => router.push("/")}
-          className="px-8 py-3 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full font-bold hover:scale-105 transition-transform shadow-lg"
-        >
-          ← 戻る
-        </button>
+        />
       </div>
     </div>
   );

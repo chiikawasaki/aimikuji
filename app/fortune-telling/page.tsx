@@ -20,7 +20,10 @@ const FortuneTellingPage = () => {
       try {
         const response = await fetch("/api/fortune", {
           method: "POST",
-          body: JSON.stringify({ genre: genre || "その他", worries: worries || "特になし" }),
+          body: JSON.stringify({
+            genre: genre || "その他",
+            worries: worries || "特になし",
+          }),
         });
         const data = await response.json();
 
@@ -85,8 +88,9 @@ const FortuneTellingPage = () => {
 
   return (
     <div className="relative h-screen w-screen">
-      <div className="speechBubble !absolute top-70 right-80">
-        <p className="text-black">TAP!</p>
+      {/* 吹き出し: デスクトップでは右側、モバイルでは上部（CSSで制御） */}
+      <div className="speechBubble !absolute top-30 left-40 md:right-80 md:top-70 md:left-auto">
+        <p className="text-center font-bold">TAP!</p>
       </div>
       <div className="flex flex-col justify-center items-center h-screen gap-8 px-4">
         <Image
@@ -102,7 +106,7 @@ const FortuneTellingPage = () => {
             id="file"
             max="100"
             value={progressValue}
-            className="w-full h-6 rounded-full overflow-hidden bg-gradient-to-r from-indigo-950/50 to-purple-950/50 border-2 border-indigo-400/40 shadow-xl shadow-indigo-900/30 backdrop-blur-md progress-bar"
+            className="w-full h-6 rounded-full overflow-hidden bg-pink-500/10 border-2 border-pink-400/40 progress-bar"
           >
             {Math.round(progressValue)}%
           </progress>
