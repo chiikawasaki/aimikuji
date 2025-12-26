@@ -81,53 +81,91 @@ const ResultPage = () => {
     fullMark: 5,
   }));
   // 3. 結果がある場合の表示
+  // 3. 結果がある場合の表示
   return (
-    <div className="">
-      <h1 className="text-2xl font-bold mb-6">今日の結果</h1>
-      <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md max-w-lg shadow-2xl flex justify-center border-2 border-indigo-400/40 shadow-indigo-900/30">
-        <p className=" text-2xl font-bold">運勢: {result.fortune}</p>
-      </div>
-      <div className="h-80 my-4 bg-white/10 rounded-2xl backdrop-blur-md max-w-lg shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900/30">
-        <p>運勢分析グラフ</p>
-        <ResponsiveContainer height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
-            <PolarGrid stroke="#ffffff44" />
-            <PolarAngleAxis
-              dataKey="item"
-              stroke="#fff"
-              tick={{ fill: "#fff", fontSize: 12 }}
-            />
-            <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} />
-            <Radar
-              name="運勢"
-              dataKey="score"
-              stroke="#ff88d8"
-              fill="#ff88d8"
-              fillOpacity={0.6}
-            />
-          </RadarChart>
-        </ResponsiveContainer>
-      </div>
-      <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md max-w-lg whitespace-pre-wrap shadow-2xl">
-        <p>天のみこえ: {result.voiceOfHeaven}</p>
-        <div className="mt-4">
-          <h3 className="text-lg font-bold mb-2">分析</h3>
-          <ul className="list-disc pl-5">
-            {result.analysis.map((item) => (
-              <li key={item.item}>
-                <span className="font-bold">{item.item}:</span> {item.advice} (
-                {item.score}/5)
-              </li>
-            ))}
-          </ul>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">今日の結果</h1>
+
+      {/* Gridコンテナ: スマホは1列、PC(lg以上)は2列 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        {/* --- 左カラム: 運勢とグラフ --- */}
+        <div className="space-y-6">
+          <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl flex flex-col items-center border-2 border-indigo-400/40 shadow-indigo-900/30">
+            <span className="text-indigo-200 text-sm mb-2">今日の運勢</span>
+            <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-indigo-300">
+              {result.fortune}
+            </p>
+          </div>
+
+          <div className="h-[400px] p-6 bg-white/10 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900/30">
+            <p className="text-lg font-bold mb-2">運勢分析グラフ</p>
+            <ResponsiveContainer width="100%" height="90%">
+              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
+                <PolarGrid stroke="#ffffff44" />
+                <PolarAngleAxis
+                  dataKey="item"
+                  stroke="#fff"
+                  tick={{ fill: "#fff", fontSize: 12 }}
+                />
+                <PolarRadiusAxis
+                  domain={[0, 5]}
+                  tick={false}
+                  axisLine={false}
+                />
+                <Radar
+                  name="運勢"
+                  dataKey="score"
+                  stroke="#ff88d8"
+                  fill="#ff88d8"
+                  fillOpacity={0.6}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* --- 右カラム: 天のみこえと分析詳細 --- */}
+        <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900/30 space-y-8">
+          <div>
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <span className="text-2xl">✨</span> 天のみこえ
+            </h3>
+            <p className="text-lg italic leading-relaxed text-indigo-50 border-l-4 border-pink-400 pl-4">
+              {result.voiceOfHeaven}
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <span className="text-2xl">🔍</span> 詳細分析
+            </h3>
+            <div className="space-y-6">
+              {result.analysis.map((item) => (
+                <div key={item.item} className="group">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-pink-200">{item.item}</span>
+                    <span className="text-sm bg-indigo-500/30 px-2 py-0.5 rounded-full">
+                      スコア: {item.score}/5
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-200 leading-snug">
+                    {item.advice}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-      <button
-        onClick={() => router.push("/")}
-        className="mt-8 text-pink-300 hover:text-pink-100 transition-colors"
-      >
-        ← 戻る
-      </button>
+
+      <div className="mt-12 text-center">
+        <button
+          onClick={() => router.push("/")}
+          className="px-8 py-3 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-full font-bold hover:scale-105 transition-transform shadow-lg"
+        >
+          ← 戻る
+        </button>
+      </div>
     </div>
   );
 };
