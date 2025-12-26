@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+} from "recharts";
 
 const ResultPage = () => {
   const [result, setResult] = useState<{
@@ -67,12 +75,40 @@ const ResultPage = () => {
     );
   }
 
+  const data = result.analysis.map((item) => ({
+    item: item.item,
+    score: item.score,
+    fullMark: 5,
+  }));
   // 3. 結果がある場合の表示
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 text-white">
+    <div className="">
       <h1 className="text-2xl font-bold mb-6">今日の結果</h1>
+      <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md max-w-lg shadow-2xl flex justify-center border-2 border-indigo-400/40 shadow-indigo-900/30">
+        <p className=" text-2xl font-bold">運勢: {result.fortune}</p>
+      </div>
+      <div className="h-80 my-4 bg-white/10 rounded-2xl backdrop-blur-md max-w-lg shadow-2xl border-2 border-indigo-400/40 shadow-indigo-900/30">
+        <p>運勢分析グラフ</p>
+        <ResponsiveContainer height="100%">
+          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
+            <PolarGrid stroke="#ffffff44" />
+            <PolarAngleAxis
+              dataKey="item"
+              stroke="#fff"
+              tick={{ fill: "#fff", fontSize: 12 }}
+            />
+            <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} />
+            <Radar
+              name="運勢"
+              dataKey="score"
+              stroke="#ff88d8"
+              fill="#ff88d8"
+              fillOpacity={0.6}
+            />
+          </RadarChart>
+        </ResponsiveContainer>
+      </div>
       <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md max-w-lg whitespace-pre-wrap shadow-2xl">
-        <p>運勢: {result.fortune}</p>
         <p>天のみこえ: {result.voiceOfHeaven}</p>
         <div className="mt-4">
           <h3 className="text-lg font-bold mb-2">分析</h3>
