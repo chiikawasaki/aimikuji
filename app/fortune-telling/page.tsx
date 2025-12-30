@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import confetti from "canvas-confetti";
 
-const FortuneTellingPage = () => {
+const FortuneTellingContent = () => {
   const [clickCount, setClickCount] = useState(0);
   const [apiFinished, setApiFinished] = useState(false);
   const [fortuneId, setFortuneId] = useState<string | null>(null);
@@ -120,6 +120,20 @@ const FortuneTellingPage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const FortuneTellingPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-screen">
+          読み込み中...
+        </div>
+      }
+    >
+      <FortuneTellingContent />
+    </Suspense>
   );
 };
 
