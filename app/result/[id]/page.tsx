@@ -11,16 +11,22 @@ import {
   Text,
 } from "recharts";
 import Button from "@/components/Button";
-import { ChartPieIcon, GiftIcon, MessageCircleIcon } from "lucide-react";
+import {
+  ChartPieIcon,
+  GiftIcon,
+  MessageCircleIcon,
+  Share2Icon,
+  HomeIcon,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 type FortuneResult = {
-    fortune: string;
-    voiceOfHeaven: string;
-    overallMessage: string;
-    luckyItem: string;
-    analysis: { item: string; advice: string; score: number }[];
-  };
+  fortune: string;
+  voiceOfHeaven: string;
+  overallMessage: string;
+  luckyItem: string;
+  analysis: { item: string; advice: string; score: number }[];
+};
 
 const ResultPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
@@ -118,10 +124,51 @@ const ResultPage = ({ params }: { params: Promise<{ id: string }> }) => {
     </Text>
   );
 
-  // 3. 結果がある場合の表示
+  // 共有機能
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareText = `今日の運勢は「${result.fortune}」でした！ #AIみくじ`;
+
+    // Web Share API が使える場合
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "AIみくじの結果",
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (error) {
+        // ユーザーがキャンセルした場合など
+        console.log("Share cancelled");
+      }
+    } else {
+      // フォールバック: クリップボードにコピー
+      await navigator.clipboard.writeText(shareUrl);
+      alert("URLをコピーしました！");
+    }
+  };
+
   // 3. 結果がある場合の表示
   return (
-    <div className="max-w-8xl mx-auto px-4 py-8">
+    <div className="max-w-8xl mx-auto px-4 py-8 relative">
+      {/* 右上のボタン */}
+      <div className="absolute top-4 right-4 flex gap-2">
+        <button
+          onClick={() => router.push("/")}
+          className="p-3 bg-pink-50 rounded-full border-2 border-pink-400/30 shadow-lg hover:bg-pink-100 transition-colors"
+          aria-label="ホームに戻る"
+        >
+          <HomeIcon className="w-5 h-5" />
+        </button>
+        <button
+          onClick={handleShare}
+          className="p-3 bg-pink-50 rounded-full border-2 border-pink-400/30 shadow-lg hover:bg-pink-100 transition-colors"
+          aria-label="結果を共有"
+        >
+          <Share2Icon className="w-5 h-5" />
+        </button>
+      </div>
+
       <h1 className="text-3xl font-bold mb-8 text-center">今日の結果</h1>
 
       {/* Gridコンテナ: スマホは1列、PC(lg以上)は2列 */}
