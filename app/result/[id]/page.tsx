@@ -150,26 +150,28 @@ const ResultPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   // 3. 結果がある場合の表示
   return (
-    <div className="max-w-8xl mx-auto px-4 py-8 relative">
-      {/* 右上のボタン */}
-      <div className="absolute top-4 right-4 flex gap-2">
-        <button
-          onClick={() => router.push("/")}
-          className="p-3 bg-pink-50 rounded-full border-2 border-pink-400/30 shadow-lg hover:bg-pink-100 transition-colors"
-          aria-label="ホームに戻る"
-        >
-          <HomeIcon className="w-5 h-5" />
-        </button>
-        <button
-          onClick={handleShare}
-          className="p-3 bg-pink-50 rounded-full border-2 border-pink-400/30 shadow-lg hover:bg-pink-100 transition-colors"
-          aria-label="結果を共有"
-        >
-          <Share2Icon className="w-5 h-5" />
-        </button>
+    <div className="max-w-8xl mx-auto px-4 py-8">
+      {/* ヘッダー: タイトルとボタン */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="w-24" /> {/* 左側のスペーサー */}
+        <h1 className="text-3xl font-bold text-center">今日の結果</h1>
+        <div className="flex gap-2 w-24 justify-end">
+          <button
+            onClick={() => router.push("/")}
+            className="p-3 bg-pink-50 rounded-full border-2 border-pink-400/30 shadow-lg hover:bg-pink-100 transition-colors"
+            aria-label="ホームに戻る"
+          >
+            <HomeIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleShare}
+            className="p-3 bg-pink-50 rounded-full border-2 border-pink-400/30 shadow-lg hover:bg-pink-100 transition-colors"
+            aria-label="結果を共有"
+          >
+            <Share2Icon className="w-5 h-5" />
+          </button>
+        </div>
       </div>
-
-      <h1 className="text-3xl font-bold mb-8 text-center">今日の結果</h1>
 
       {/* Gridコンテナ: スマホは1列、PC(lg以上)は2列 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
