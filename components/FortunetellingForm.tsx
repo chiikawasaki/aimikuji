@@ -75,6 +75,7 @@ const FortunetellingForm = () => {
         buttonType="submit"
         text={isAlreadyDone ? "今日の結果を見る" : "おみくじを引く"}
       />
+      {isAlreadyDone && <p>おみくじは1日に一回までです！</p>}
     </form>
   );
 };

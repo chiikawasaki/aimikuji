@@ -152,10 +152,11 @@ const ResultPage = ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="max-w-8xl mx-auto px-4 py-8">
       {/* ヘッダー: タイトルとボタン */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="w-24" /> {/* 左側のスペーサー */}
+      <div className="flex flex-col-reverse md:flex-row items-center justify-between mb-8 gap-4">
+        <div className="hidden md:block w-24" />
+        {/* 左側のスペーサー（デスクトップのみ） */}
         <h1 className="text-3xl font-bold text-center">今日の結果</h1>
-        <div className="flex gap-2 w-24 justify-end">
+        <div className="flex gap-2 md:w-24 justify-end self-end md:self-auto">
           <button
             onClick={() => router.push("/")}
             className="p-3 bg-pink-50 rounded-full border-2 border-pink-400/30 shadow-lg hover:bg-pink-100 transition-colors"
