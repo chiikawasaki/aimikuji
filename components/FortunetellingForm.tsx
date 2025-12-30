@@ -43,7 +43,13 @@ const FortunetellingForm = () => {
     });
     if (isAlreadyDone) {
       // すでに占っていれば、そのまま結果ページへ
-      router.push("/result");
+      const saved = localStorage.getItem("my_fortune");
+      if (saved) {
+        const { id } = JSON.parse(saved);
+        router.push(`/result/${id}`);
+      } else {
+        router.push("/result");
+      }
       return;
     }
     router.push(`/fortune-telling?${params.toString()}`);
