@@ -53,7 +53,7 @@ const SelectButton = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-2 rounded-xl bg-pink-50 border-2 border-pink-300/30 shadow-xl shadow-pink-700/10 backdrop-blur-md overflow-hidden">
+        <div className="absolute z-10 w-full mt-2 rounded-xl bg-pink-50 border-2 border-pink-300/30 shadow-xl shadow-pink-700/10 backdrop-blur-md overflow-hidden max-h-60 overflow-y-auto">
           {defaultOptions.map((option) => (
             <button
               key={option.value}
