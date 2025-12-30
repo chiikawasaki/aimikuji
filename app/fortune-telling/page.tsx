@@ -7,6 +7,7 @@ import confetti from "canvas-confetti";
 const FortuneTellingPage = () => {
   const [clickCount, setClickCount] = useState(0);
   const [apiFinished, setApiFinished] = useState(false);
+  const [fortuneId, setFortuneId] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
   const maxClicks = 10;
@@ -27,6 +28,8 @@ const FortuneTellingPage = () => {
         });
         const data = await response.json();
 
+        setFortuneId(data.id);
+
         // localStorageに今日の日付と結果を保存
         const fortuneData = {
           date: new Date().toLocaleDateString(),
@@ -41,7 +44,7 @@ const FortuneTellingPage = () => {
     };
 
     fetchFortune();
-  }, []);
+  }, [searchParams]);
 
   const handleConfetti = () => {
     confetti({
@@ -81,7 +84,11 @@ const FortuneTellingPage = () => {
       if (nextCount >= maxClicks) {
         handleConfetti();
         // 10回クリックしたら次の画面に遷移
-        router.push("/result");
+        if (fortuneId) {
+          router.push(`/result/${fortuneId}`);
+        } else {
+          router.push("/result");
+        }
       }
     }
   };

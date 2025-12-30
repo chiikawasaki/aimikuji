@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+import { supabase } from "@/lib/supabase";
 
 const fortuneSchema = z.object({
   fortune: z.string(), // 運勢（大吉、中吉、吉、末吉、凶、大凶など）
@@ -60,7 +61,25 @@ export async function POST(request: Request) {
     if (!text) throw new Error("APIからの応答が空です");
 
     const parsedData = JSON.parse(text);
-    return NextResponse.json(fortuneSchema.parse(parsedData));
+    // DBに保存
+    const { data: insertData, error: dbError } = await supabase
+      .from("fortunes")
+      .insert({
+        genre: genre,
+        worries: worries,
+        fortune: parsedData.fortune,
+        voice_of_heaven: parsedData.voiceOfHeaven,
+        overall_message: parsedData.overallMessage,
+        lucky_item: parsedData.luckyItem,
+        analysis: parsedData.analysis,
+      })
+      .select("id")
+      .single();
+    if (dbError) throw new Error("DBに保存に失敗しました");
+    return NextResponse.json({
+      id: insertData.id,
+      ...fortuneSchema.parse(parsedData),
+    });
   } catch (error) {
     console.error("Gemini API Error:", error);
     return NextResponse.json({ error: "占いに失敗しました" }, { status: 500 });
