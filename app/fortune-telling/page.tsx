@@ -97,6 +97,16 @@ const FortuneTellingContent = () => {
     }
   };
 
+  // 10回クリック完了後はローディング画面を表示
+  if (clickFinished) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <div className="animate-spin h-12 w-12 border-4 border-pink-500 rounded-full border-t-transparent"></div>
+        <p className="text-lg font-medium">運勢を読み取っています...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative h-screen w-screen">
       {/* 吹き出し: デスクトップでは右側、モバイルでは上部（CSSで制御） */}
