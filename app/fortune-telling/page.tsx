@@ -7,6 +7,7 @@ import confetti from "canvas-confetti";
 const FortuneTellingContent = () => {
   const [clickCount, setClickCount] = useState(0);
   const [apiFinished, setApiFinished] = useState(false);
+  const [clickFinished, setClickFinished] = useState(false);
   const [fortuneId, setFortuneId] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -46,6 +47,13 @@ const FortuneTellingContent = () => {
     fetchFortune();
   }, [searchParams]);
 
+  // クリック完了 & API完了 の両方が揃ったら遷移
+  useEffect(() => {
+    if (clickFinished && apiFinished && fortuneId) {
+      router.push(`/result/${fortuneId}`);
+    }
+  }, [clickFinished, apiFinished, fortuneId, router]);
+
   const handleConfetti = () => {
     confetti({
       // パーティクルの数（デフォルト50)
@@ -83,12 +91,8 @@ const FortuneTellingContent = () => {
       setClickCount(nextCount);
       if (nextCount >= maxClicks) {
         handleConfetti();
-        // 10回クリックしたら次の画面に遷移
-        if (fortuneId) {
-          router.push(`/result/${fortuneId}`);
-        } else {
-          router.push("/result");
-        }
+        // 10回クリック完了フラグを立てる（APIが完了したら遷移）
+        setClickFinished(true);
       }
     }
   };
