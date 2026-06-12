@@ -16,7 +16,7 @@ const fortuneSchema = z.object({
         item: z.string(), // 項目名（例：恋愛なら「出会い」「誠実さ」などAIが決定）
         advice: z.string(), // その項目への具体的なアドバイス
         score: z.number().min(1).max(5), // 5点満点中何点か
-      })
+      }),
     )
     .length(5), // 常に5つの項目を出力させる
 });
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: prompt,
       config: {
         systemInstruction: `
